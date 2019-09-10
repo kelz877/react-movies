@@ -1,8 +1,8 @@
 import React, {useState, useEffect} from 'react'
 import '../designs/BaseLayout.css'
-import {Link} from 'react-router-dom'
+import {connect} from 'react-redux'
 
-function MovieList() { 
+function MovieList(props) { 
     const [movies, setMovies] = useState([])
 
     const fetchMovies = () => {
@@ -17,8 +17,14 @@ function MovieList() {
     }
     useEffect(() => {
         fetchMovies()
-    }, [])
+    }, [props.urlID])
    
+    const onSearchClick = (ID) => {
+        //get value of id
+        console.log("Button Test")
+        console.log(ID)
+        props.getMovieDetails(ID)
+    }
 
     return (
         <div className="movieDisplayBoxes">
@@ -27,14 +33,20 @@ function MovieList() {
                             <img className='imageDisplay' src={movie.Poster} />
                             <p>{movie.Title}</p>
                             
+                            <button onClick={() => onSearchClick(movie.imdbID)} >More Details</button>
                             
-                            <input type="hidden" name="id" value={movie.imdbID} />
                 </div>)
             })}
-            test
+            
         </div>
     )
 
     
 }
-export default MovieList;
+const mapDispatchToProps = (dispatch) => {
+    return {
+        getMovieDetails: (ID) => dispatch({urlID: ID, type: 'URL_MOVIE_DETAILS'})
+    }
+}
+
+export default connect(null, mapDispatchToProps)(MovieList);

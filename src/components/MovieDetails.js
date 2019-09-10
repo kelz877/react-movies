@@ -1,40 +1,50 @@
 import React, {useState, useEffect} from 'react'
 import '../designs/BaseLayout.css'
 import {Link} from 'react-router-dom'
+import {connect} from 'react-redux'
 
-function MovieDetails () {
-    const [details, setDetails] = useState([])
+function MovieDetails (props) {
+    const [details, setDetails] = useState({})
 
     const fetchDetails = () => {
-        fetch('http://www.omdbapi.com/?i=tt3896198&apikey=d42023ea')
+        fetch(`http://www.omdbapi.com/?i=${props.movie_id}&apikey=d42023ea`)
         .then(response => response.json())
         .then(json => {
-            json = (Object.values(json))
+            //console.log(json)
+            
             console.log(json)
             setDetails(json)
         })
     }
     
     useEffect(() => {
+        console.log("text test")
         fetchDetails()
-    }, [])
+    }, [props.movie_id])
 
     return (
         <div className="movieDetailsDisplay">
-            <div> 
-                {details.filter(detail => {return typeof(detail) == 'string'})
-                .map((detail) => {
-                    console.log(detail)
-                        return <div>{detail}</div>
-                    }                    
-                )} 
-                </div>
-
             
+                {
+                    <div>
+                    <img className="detailImageDisplay" src={details.Poster} />
+                    <div>Title: {details.Title}</div>
+                    <div>Actors: {details.Actors}</div>
+                    <div>Release Year: {details.Year}</div>
+                    <div>Director: {details.Director}</div>
+                    </div>
+                }
+
+                
 
         </div>
+                
     )
 }
 
-
-export default MovieDetails;
+const mapStateToProps = (state) => {
+    return {
+        movie_id: state.urlID
+    }
+}
+export default connect(mapStateToProps, null)(MovieDetails);

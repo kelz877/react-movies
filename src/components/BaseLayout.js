@@ -19,7 +19,7 @@ const BaseLayout = () => {
                 </nav>
             </header>
             <div className="displayMovies">
-                {/* <MovieList /> */}
+                <MovieList />
             </div>
             <div className="moviePosterDisplay">
                 <MovieDetails />
